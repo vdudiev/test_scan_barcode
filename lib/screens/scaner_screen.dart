@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:test_scan_barcode/widgets/main_button.dart';
@@ -15,8 +16,15 @@ class ScanerScreen extends StatefulWidget {
 
 class _ScanerScreenState extends State<ScanerScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QRScaner');
+  bool isScanOn = false;
+  bool isHasCamrePermissions = false;
+
+  bool hasPermissions = true;
+  QRViewController? qrController;
   @override
   void initState() {
+    _checkPermissions();
+
     super.initState();
   }
 
@@ -41,8 +49,18 @@ class _ScanerScreenState extends State<ScanerScreen> {
     super.dispose();
   }
 
-  bool isScanOn = false;
-  QRViewController? qrController;
+  void _checkPermissions() async {
+    if (await Permission.camera.isDenied) {
+      var status = await Permission.camera.request();
+      if (status.isGranted) {
+        isHasCamrePermissions = true;
+        setState(() {});
+      }
+    } else {
+      isHasCamrePermissions = true;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +70,9 @@ class _ScanerScreenState extends State<ScanerScreen> {
           alignment: Alignment.center,
           fit: StackFit.expand,
           children: [
-            QRView(key: qrKey, onQRViewCreated: _onQRViewCreated),
+            isHasCamrePermissions
+                ? QRView(key: qrKey, onQRViewCreated: _onQRViewCreated)
+                : Container(),
             Positioned(
                 bottom: 100,
                 child: MainButton(
