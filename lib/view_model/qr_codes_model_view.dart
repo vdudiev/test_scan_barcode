@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:test_scan_barcode/core/main_app.dart';
 import 'package:test_scan_barcode/models/scan_model.dart';
 

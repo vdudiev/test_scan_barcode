@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_scan_barcode/core/main_app.dart';
-import 'package:test_scan_barcode/widgets/main_button.dart';
 
 class ScansListScreen extends StatelessWidget {
   const ScansListScreen({super.key});
@@ -10,10 +9,7 @@ class ScansListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final qrCodeList = context.watch<CoreViewModel>().qrCodesList;
     return Scaffold(
-        body: Stack(
-      alignment: Alignment.center,
-      children: [
-        qrCodeList.isNotEmpty
+        body: qrCodeList.isNotEmpty
             ? ListView.builder(
                 itemCount: qrCodeList.length,
                 itemBuilder: (context, index) => _ScanListItem(
@@ -23,16 +19,7 @@ class ScansListScreen extends StatelessWidget {
               )
             : const Center(
                 child: Text("Пусто"),
-              ),
-        Positioned(
-            bottom: 50,
-            child: MainButton(
-                title: 'add scan',
-                onTap: () => context
-                    .read<CoreViewModel>()
-                    .addQRScan(codeData: "Example scan"))),
-      ],
-    ));
+              ));
   }
 }
 
