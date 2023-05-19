@@ -1,36 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../view_model/qr_codes_model_view.dart';
+import 'package:test_scan_barcode/core/main_app.dart';
+import 'package:test_scan_barcode/widgets/main_button.dart';
 
 class ScansListScreen extends StatelessWidget {
   const ScansListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final qrCodeList = context.read<QRCodeViewModel>();
+    final qrCodeList = context.watch<CoreViewModel>().qrCodesList;
     return Scaffold(
-        body: qrCodeList.qrCodesList.isNotEmpty
+        body: Stack(
+      alignment: Alignment.center,
+      children: [
+        qrCodeList.isNotEmpty
             ? ListView.builder(
-                itemCount: qrCodeList.qrCodesList.length,
-                itemBuilder: (context, index) =>
-                    _ScanListItem(title: qrCodeList.qrCodesList[index]),
+                itemCount: qrCodeList.length,
+                itemBuilder: (context, index) => _ScanListItem(
+                  title: qrCodeList[index].scan,
+                  scanDate: qrCodeList[index].scanDate,
+                ),
               )
             : const Center(
                 child: Text("Пусто"),
-              ));
+              ),
+        Positioned(
+            bottom: 50,
+            child: MainButton(
+                title: 'add scan',
+                onTap: () => context
+                    .read<CoreViewModel>()
+                    .addQRScan(codeData: "Example scan"))),
+      ],
+    ));
   }
 }
 
 class _ScanListItem extends StatelessWidget {
-  final String title;
-  const _ScanListItem({required this.title});
+  final String? title;
+  final String? scanDate;
+  const _ScanListItem({required this.title, required this.scanDate});
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title),
-      subtitle: const Divider(
-        height: 0,
+      title: Text(title ?? ''),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(scanDate ?? ''),
+          const Divider(),
+        ],
       ),
     );
   }

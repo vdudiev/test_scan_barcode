@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:test_scan_barcode/core/main_app.dart';
 import 'package:test_scan_barcode/widgets/main_button.dart';
 
 import '../view_model/qr_codes_model_view.dart';
@@ -24,13 +25,12 @@ class _ScanerScreenState extends State<ScanerScreen> {
   @override
   void initState() {
     _checkPermissions();
-
     super.initState();
   }
 
   void _onQRViewCreated(QRViewController qRViewController) {
     qrController = qRViewController;
-    QRCodeViewModel qrCodeModelView = context.read<QRCodeViewModel>();
+    var qrCodeModelView = context.read<CoreViewModel>();
     qRViewController.scannedDataStream.listen((scanData) {
       if (isScanOn && scanData.code != null) {
         qrCodeModelView.addQRScan(codeData: scanData.code!);

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_scan_barcode/core/main_app.dart';
 import 'package:test_scan_barcode/widgets/main_button.dart';
 import 'package:test_scan_barcode/screens/scaner_screen.dart';
 import 'package:test_scan_barcode/screens/scans_list_screen.dart';
-
-import '../view_model/qr_codes_model_view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -36,12 +35,12 @@ class HomePage extends StatelessWidget {
   }
 
   _openNewScreen({required BuildContext context, required Widget screen}) {
-    QRCodeViewModel qrCodeModelView = context.read();
+    var qrCodeModelView = context.read<CoreViewModel>();
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (contextLoginScreen) =>
-              Provider.value(value: qrCodeModelView, child: screen),
+          builder: (contextLoginScreen) => ChangeNotifierProvider.value(
+              value: qrCodeModelView, child: screen),
         ));
   }
 }
